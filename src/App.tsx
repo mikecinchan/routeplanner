@@ -1,6 +1,6 @@
 // src/App.tsx
 import React, { useEffect, useMemo, useRef, useState } from "react"
-import { EVENTS, DAY_ORDER, type EventItem } from "./data/events"
+import { EVENTS, DAY_ORDER, type EventItem } from "./Data/events"
 
 const SGT = "Asia/Singapore"
 const fmtTime = (d: string | Date) =>
