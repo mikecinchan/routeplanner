@@ -1,14 +1,123 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0" />
-    <title>Token2049 Route Planner</title>
-  </head>
-  <body class="bg-neutral-50">
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Token2049 Singapore Route Planner</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1>🚇 Token2049 Singapore Route Planner</h1>
+            <div class="date-selector">
+                <button class="date-btn active" data-date="2024-09-30">Sep 30</button>
+                <button class="date-btn" data-date="2024-10-01">Oct 1</button>
+                <button class="date-btn" data-date="2024-10-02">Oct 2</button>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <div class="map-section">
+                <h2>Singapore MRT Network
+                    <span class="help-icon" title="Click to see map controls">ℹ️</span>
+                </h2>
+                <div class="map-instructions" id="map-instructions" style="display: none;">
+                    <div class="instruction-content">
+                        <h4>🗺️ Map Controls:</h4>
+                        <ul>
+                            <li><strong>Desktop:</strong> Mouse wheel to zoom, drag to pan, double-click to zoom in/reset</li>
+                            <li><strong>Mobile:</strong> Pinch to zoom, drag with one finger to pan</li>
+                            <li><strong>Buttons:</strong> Use 🔍+ / 🔍- to zoom, ⌂ to reset, ⛶ for fullscreen</li>
+                            <li><strong>Keyboard:</strong> + / - to zoom, 0 to reset, F to fullscreen</li>
+                        </ul>
+                        <button class="close-instructions" onclick="document.getElementById('map-instructions').style.display='none'">Got it! ✓</button>
+                    </div>
+                </div>
+                <div class="mrt-map-container">
+                    <div class="zoom-controls">
+                        <button id="zoom-in" class="zoom-btn" title="Zoom In">🔍+</button>
+                        <button id="zoom-out" class="zoom-btn" title="Zoom Out">🔍-</button>
+                        <button id="zoom-reset" class="zoom-btn" title="Reset Zoom">⌂</button>
+                        <button id="fullscreen-toggle" class="zoom-btn" title="Toggle Fullscreen">⛶</button>
+                    </div>
+                    <div class="map-wrapper" id="map-wrapper" style="position: relative; overflow: hidden; cursor: grab;">
+                        <div class="map-content" id="map-content" style="transition: transform 0.3s ease; transform-origin: center center;">
+                            <img id="mrt-map-base" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==" alt="Singapore MRT Map" style="width: 100%; height: auto; border-radius: 8px; user-select: none;">
+
+                            <svg id="mrt-map-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;">
+                                <defs>
+                                    <style>
+                                        .station-circle { fill: rgba(255, 255, 255, 0.9); stroke: #333; stroke-width: 2; cursor: pointer; pointer-events: all; }
+                                        .station-circle:hover { fill: #ffeb3b; }
+                                        .station-text { font-family: Arial, sans-serif; font-size: 11px; fill: white; text-anchor: middle; pointer-events: none; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.8); }
+                                        .event-marker { fill: #f44336; stroke: white; stroke-width: 2; animation: pulse 2s infinite; pointer-events: all; cursor: pointer; }
+                                        .hotel-marker { fill: #FF5722; stroke: white; stroke-width: 3; }
+                                        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+                                    </style>
+                                </defs>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="map-legend">
+                    <div class="legend-item">
+                        <span class="legend-color line-red"></span>
+                        <span>North-South Line</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color line-blue"></span>
+                        <span>East-West Line</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color line-green"></span>
+                        <span>Downtown Line</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color line-orange"></span>
+                        <span>Circle Line</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color line-purple"></span>
+                        <span>Northeast Line</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color line-brown"></span>
+                        <span>Thomson-East Coast</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="events-section">
+                <div class="filters">
+                    <label>
+                        <input type="checkbox" id="preferred-only" checked>
+                        Preferred Events Only
+                    </label>
+                    <label>
+                        <input type="checkbox" id="merch-events">
+                        MERCH Available
+                    </label>
+                </div>
+
+                <div id="events-container">
+                    <!-- Events will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <div class="route-info">
+            <h3>🏨 From Hotel</h3>
+            <div id="route-details">
+                <p>Select an event to see route information</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="events-data.js"></script>
+    <script src="setup-image.js"></script>
+    <script src="zoom-controls.js"></script>
+    <script src="app.js"></script>
+</body>
 </html>
