@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Print-friendly checklist */
+@media print {
+  .print\:p-0 { padding: 0 !important; }
+  .break-inside-avoid { break-inside: avoid; }
+}
